@@ -53,10 +53,10 @@ class Spaceship(pygame.sprite.Sprite):
                 self.life -= 1
 
 pygame.init()
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((1280, 1024))
 pygame.display.set_caption("Asteroids")
 
-sky = scale(pygame.image.load("images/road.png"), (800, 600))
+sky = scale(pygame.image.load("images/road.png"), (1280, 1024))
 
 ship = Spaceship(400, 400)
 
@@ -72,7 +72,7 @@ font = pygame.font.SysFont('Comic Sans MS', 30)
 while True:
 
     if random.randint(1, 1000) > 900:
-        asteroid_x = random.randint(-100, 700)
+        asteroid_x = random.randint(325, 325)
         asteroid_y = -100
         asteroid = Asteroid(asteroid_x, asteroid_y)
         asteroids.add(asteroid)
