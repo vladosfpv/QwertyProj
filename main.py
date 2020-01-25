@@ -56,7 +56,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Asteroids")
 
-sky = scale(pygame.image.load("images/sky.jpg"), (800, 600))
+sky = scale(pygame.image.load("images/road.png"), (800, 600))
 
 ship = Spaceship(400, 400)
 
