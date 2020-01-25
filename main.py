@@ -1,41 +1,109 @@
 import pygame
+import random
+from pygame.transform import scale
 
-FPS = 60
-W = 700  # ширина экрана
-H = 300  # высота экрана
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RIGHT = "to the right"
-LEFT = "to the left"
-STOP = "stop"
+class Asteroid(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = scale(pygame.image.load("images/asteroid.png"), (50, 50))
+        self.rect = pygame.Rect(x, y, 50, 50)
+        self.yvel = 5
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def update(self):
+        self.rect.y += self.yvel
+
+        if self.rect.y > 900:
+            self.kill()
+
+class Spaceship(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.rect = pygame.Rect(x, y, 50, 100)
+        self.image = scale(pygame.image.load("images/ship.png"), (50, 100))
+        self.xvel = 0
+        # добавим кораблю здоровье
+        self.life = 100
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    # добавим группу с астероидами в обновление координат корабля
+    def update(self, left, right, asteroids):
+        if left:
+            self.xvel -= 3
+
+        if right:
+            self.xvel += 3
+
+        if not (left or right):
+            self.xvel = 0
+
+        self.rect.x += self.xvel
+
+        # для каждого астероида
+        for asteroid in asteroids:
+            # если область, занимаемая астероидом пересекает область корабля
+            if self.rect.colliderect(asteroid.rect):
+                # уменьшаем жизнь
+                self.life -= 1
 
 pygame.init()
-sc = pygame.display.set_mode((W, H))
-clock = pygame.time.Clock()
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Asteroids")
 
-surf1 = pygame.Surface((200, 200))
-surf1.fill((0, 0, 0))  # желтая
-rect = pygame.Rect((60, 20, 600, 200))
-# координаты и радиус круга
-x = W // 2
-y = H // 2
-r = 50
+sky = scale(pygame.image.load("images/sky.jpg"), (800, 600))
 
-motion = STOP
+ship = Spaceship(400, 400)
 
-while 1:
-    sc.fill(BLACK)
-    pygame.draw.circle(surf1, WHITE, (x, y), r)
+left = False
+right = False
+
+asteroids = pygame.sprite.Group()
+
+# загрузим системный шрифт
+pygame.font.init()
+font = pygame.font.SysFont('Comic Sans MS', 30)
+
+while True:
+
+    if random.randint(1, 1000) > 900:
+        asteroid_x = random.randint(-100, 700)
+        asteroid_y = -100
+        asteroid = Asteroid(asteroid_x, asteroid_y)
+        asteroids.add(asteroid)
+
+    for e in pygame.event.get():
+
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT:
+            left = True
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT:
+            right = True
+
+        if e.type == pygame.KEYUP and e.key == pygame.K_LEFT:
+            left = False
+        if e.type == pygame.KEYUP and e.key == pygame.K_RIGHT:
+            right = False
+
+        if e.type == pygame.QUIT:
+            raise SystemExit("QUIT")
+
+    screen.blit(sky, (0, 0))
+
+    # добавим группу астероидов в параметры
+    ship.update(left, right, asteroids)
+    ship.draw(screen)
+
+    for asteroid in asteroids:
+        asteroid.update()
+        asteroid.draw(screen)
+
+    # выведем жизнь на экран белым цветом
+    life = font.render(f'HP: {ship.life}', False, (255, 255, 255))
+    screen.blit(life, (20, 20))
+
     pygame.display.update()
-
-    for i in pygame.event.get():
-        if i.type == pygame.QUIT:
-            exit()
-
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        x -= 3
-    elif keys[pygame.K_RIGHT]:
-        x += 3
-
-clock.tick(FPS)
