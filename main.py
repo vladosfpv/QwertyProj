@@ -15,7 +15,6 @@ class Asteroid(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y += self.yvel
-
         if self.rect.y > 900:
             self.kill()
 
@@ -34,19 +33,16 @@ class Spaceship(pygame.sprite.Sprite):
 
     # добавим группу с астероидами в обновление координат корабля
     def update(self, left, right, asteroids):
-        flag = False
         if(self.rect.x > 300):
-            if (left and flag != True):
-                self.rect.x -= 200
-                flag = True
+            if left:
+                self.xvel -= 5
         # если нажата клавиша вправо, увеличиваем скорость
-        if(self.rect.x < 850):
-            if (right and flag != True):
-                self.rect.x += 200
-                flag = True
+        if (self.rect.x < 850):
+            if right:
+                self.xvel += 5
         # если ничего не нажато - тормозим
-        if not (left or right):
-            flag = False
+            if not (left or right):
+                self.xvel = 0
         # изменяем координаты на скорость
 
 
@@ -57,8 +53,8 @@ class Spaceship(pygame.sprite.Sprite):
                 # уменьшаем жизнь
                 asteroid.kill()
                 self.life -= 10
-            if (ship.life < 0):
-                ship.kill()
+
+        self.rect.x += self.xvel
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
@@ -92,7 +88,6 @@ while True:
 
         if e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT:
             left = True
-            flag = True
         if e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT:
             right = True
 
@@ -114,16 +109,14 @@ while True:
         asteroid.update()
         asteroid.draw(screen)
 
+
+
     # выведем жизнь на экран белым цветом
     dist = dist + 1
     life = font.render(f'HP: {ship.life}', False, (255, 255, 255))
     distOUT = font.render(f'dist: {dist}', False, (255, 255, 255))
     screen.blit(life, (20, 20))
     screen.blit(distOUT, (1100, 20))
-    if (ship.life < 1):
-        ship.kill(ship)
-    if (dist > 999):
-        raise SystemExit("QUIT")
 
 
     pygame.display.update()
