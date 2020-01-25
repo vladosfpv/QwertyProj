@@ -107,3 +107,4 @@ while True:
     screen.blit(life, (20, 20))
 
     pygame.display.update()
+    #Gennadiy ti lochara
