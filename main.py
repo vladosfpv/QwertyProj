@@ -276,9 +276,9 @@ while True:
         gem.draw(screen)
     dist -= 20
     # выведем жизнь на экран белым цветом
-    score1 = font.render(f'player 1: {ship1.score}', False, (255, 255, 255))
-    score2 = font.render(f'player 2: {ship2.score}', False, (255, 255, 255))
-    distTo = font.render(f'Distance to finish: {dist}', False, (255, 255, 255))
+    score1 = font.render('player 1: {ship1.score}', False, (255, 255, 255))
+    score2 = font.render('player 2: {ship2.score}', False, (255, 255, 255))
+    distTo = font.render('Distance to finish: {dist}', False, (255, 255, 255))
     screen.blit(score1, (20, 20))
     screen.blit(score2, (1000, 20))
     screen.blit(distTo, (500, 40))
