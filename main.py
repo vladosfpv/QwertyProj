@@ -27,47 +27,50 @@ class Player1(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     # добавим группу с астероидами в обновление координат корабля
-        def update(self, left1, right1, up1, down1, asteroids):
-            if left1:
+    def update(self, left1, right1, up1, down1, asteroids, another):
+        if left1:
+            self.xvel -= 5
+        # если нажата клавиша вправо, увеличиваем скорость
+        if right1:
+            self.xvel += 5
+        if up1:
+            self.yvel -= 5
+        if down1:
+            self.yvel += 5
+        # если ничего не нажато - тормозим
+        if not (left1 or right1 or down1 or up1):
+            # выравнивание по иксу
+            if self.xvel > 0:
                 self.xvel -= 5
-            # если нажата клавиша вправо, увеличиваем скорость
-            if right1:
+            elif self.xvel < 0:
                 self.xvel += 5
-            if up1:
-                self.yvel -= 5
-            if down1:
+            # выравнивание по игрику
+            if self.yvel < 0:
                 self.yvel += 5
-            # если ничего не нажато - тормозим
-            if not (left1 or right1 or down1 or up1):
-                # выравнивание по иксу
-                if self.xvel > 0:
-                    self.xvel -= 5
-                elif self.xvel < 0:
-                    self.xvel += 5
-                # выравнивание по игрику
-                if self.yvel < 0:
-                    self.yvel += 5
-                if self.yvel > 0:
-                    self.yvel -= 5
-                # автостопы
-            if self.rect.x <= 210:
-                self.xvel = 5
-            if self.rect.x >= 970:
-                self.xvel = -5
-            if self.rect.y <= 0:
-                self.yvel = +5
-            if self.rect.y >= 1024:
-                self.yvel = -5
+            if self.yvel > 0:
+                self.yvel -= 5
+            # автостопы
+        if self.rect.x <= 210:
+            self.xvel = 5
+        if self.rect.x >= 970:
+            self.xvel = -5
+        if self.rect.y <= 0:
+            self.yvel = +5
+        if self.rect.y >= 1024:
+            self.yvel = -5
         # изменяем координаты на скорость
         for asteroid in asteroids:
             # если область, занимаемая астероидом пересекает область корабля
             if self.rect.colliderect(asteroid.rect):
                 # уменьшаем очки
                 asteroid.kill()
-                self.score -= 10
-
+                if self.score >= 10:
+                    self.score -= 10
+        if self.rect.colliderect(another.rect):
+            self.xvel = -self.xvel
         self.rect.x += self.xvel
         self.rect.y += self.yvel
+
 
 class Player2(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -81,7 +84,7 @@ class Player2(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     # добавим группу с астероидами в обновление координат корабля
-    def update(self, left2, right2, up2, down2, asteroids):
+    def update(self, left2, right2, up2, down2, asteroids,another):
         if left2:
             self.xvel -= 5
         # если нажата клавиша вправо, увеличиваем скорость
@@ -112,17 +115,17 @@ class Player2(pygame.sprite.Sprite):
             self.yvel = +5
         if self.rect.y >= 1024:
             self.yvel = -5
-        # изменяем координаты на скорость
-
-
+        # изменяем координаты на скорости
         # для каждого астероида
         for asteroid in asteroids:
             # если область, занимаемая астероидом пересекает область корабля
             if self.rect.colliderect(asteroid.rect):
                 # уменьшаем жизнь
                 asteroid.kill()
-                self.score -= 10
-
+                if self.score >= 10:
+                    self.score -= 10
+        if self.rect.colliderect(another.rect):
+            self.xvel = -self.xvel
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
@@ -173,14 +176,31 @@ while True:
         if e.type == pygame.KEYDOWN and e.key == pygame.K_s:
             down1 = True
 
+        if e.type == pygame.KEYUP and e.key == pygame.K_a:
+            left1 = False
+        if e.type == pygame.KEYUP and e.key == pygame.K_d:
+            right1 = False
+        if e.type == pygame.KEYUP and e.key == pygame.K_w:
+            up1 = False
+        if e.type == pygame.KEYUP and e.key == pygame.K_s:
+            down1 = False
 
-        if e.type == pygame.KEYUP and e.key == pygame.K_j:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT:
+            left2 = True
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT:
+            right2 = True
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_UP:
+            up2 = True
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_DOWN:
+            down2 = True
+
+        if e.type == pygame.KEYUP and e.key == pygame.K_LEFT:
             left2 = False
-        if e.type == pygame.KEYUP and e.key == pygame.K_m:
+        if e.type == pygame.KEYUP and e.key == pygame.K_RIGHT:
             right2 = False
-        if e.type == pygame.KEYUP and e.key == pygame.K_k:
+        if e.type == pygame.KEYUP and e.key == pygame.K_UP:
             up2 = False
-        if e.type == pygame.KEYUP and e.key == pygame.K_n:
+        if e.type == pygame.KEYUP and e.key == pygame.K_DOWN:
             down2 = False
 
         if e.type == pygame.QUIT:
@@ -189,9 +209,9 @@ while True:
     screen.blit(sky, (0, 0))
 
     # добавим группу астероидов в параметры
-    ship1.update(left1, right1, up1, down1, asteroids)
+    ship1.update(left1, right1, up1, down1, asteroids, ship2)
     ship1.draw(screen)
-    ship2.update(left2, right2, up2, down2, asteroids)
+    ship2.update(left2, right2, up2, down2, asteroids, ship1)
     ship2.draw(screen)
 
     for asteroid in asteroids:
