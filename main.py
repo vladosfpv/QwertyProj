@@ -24,7 +24,7 @@ class Spaceship(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.rect = pygame.Rect(x, y, 50, 100)
-        self.image = scale(pygame.image.load("images/ship.png"), (50, 100))
+        self.image = scale(pygame.image.load("images/car.jpg"), (50, 100))
         self.xvel = 0
         # добавим кораблю здоровье
         self.life = 100
