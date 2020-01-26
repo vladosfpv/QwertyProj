@@ -67,7 +67,7 @@ class Player1(pygame.sprite.Sprite):
                 if self.score >= 10:
                     self.score -= 10
         if self.rect.colliderect(another.rect):
-            self.xvel = -self.xvel
+            self.xvel = (-self.xvel)/2
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
@@ -125,7 +125,7 @@ class Player2(pygame.sprite.Sprite):
                 if self.score >= 10:
                     self.score -= 10
         if self.rect.colliderect(another.rect):
-            self.xvel = -self.xvel
+            self.xvel = (-self.xvel)/2
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
