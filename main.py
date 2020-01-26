@@ -146,8 +146,6 @@ class Player2(pygame.sprite.Sprite):
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
 pygame.display.set_caption("Asteroids")
-pygame.mixer.music.load("music/mainSong.mp3")
-pygame.mixer.music.play()
 road = Road(0, 0)
 
 ship1 = Player1(300, 300)
