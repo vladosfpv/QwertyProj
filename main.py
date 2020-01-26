@@ -189,7 +189,7 @@ down2 = False
 
 asteroids = pygame.sprite.Group()
 gems = pygame.sprite.Group()
-dist = 10000;
+dist = 17500;
 # загрузим системный шрифт
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 30)
