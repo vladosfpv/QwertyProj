@@ -24,7 +24,7 @@ class Spaceship(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.rect = pygame.Rect(x, y, 50, 100)
-        self.image = scale(pygame.image.load("images/car.jpg"), (50, 100))
+        self.image = scale(pygame.image.load("images/car.png"), (100, 200))
         self.xvel = 0
         # добавим кораблю здоровье
         self.life = 100
@@ -34,14 +34,19 @@ class Spaceship(pygame.sprite.Sprite):
 
     # добавим группу с астероидами в обновление координат корабля
     def update(self, left, right, asteroids):
-        if(self.rect.x  > 300):
-            if left:
+        flag = False
+        if(self.rect.x > 300):
+            if (left and flag != True):
                 self.rect.x -= 200
+                flag = True
         # если нажата клавиша вправо, увеличиваем скорость
         if(self.rect.x < 850):
-            if right:
+            if (right and flag != True):
                 self.rect.x += 200
+                flag = True
         # если ничего не нажато - тормозим
+        if not (left or right):
+            flag = False
         # изменяем координаты на скорость
 
 
@@ -50,9 +55,10 @@ class Spaceship(pygame.sprite.Sprite):
             # если область, занимаемая астероидом пересекает область корабля
             if self.rect.colliderect(asteroid.rect):
                 # уменьшаем жизнь
-                self.life -= 1
-            if (self.life < 0):
-                self.kill()
+                asteroid.kill()
+                self.life -= 10
+            if (ship.life < 0):
+                ship.kill()
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
@@ -71,6 +77,8 @@ asteroids = pygame.sprite.Group()
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 30)
 
+dist = 0
+
 while True:
     if(ship.rect.x < 1):
         ship.rect.x = 1
@@ -84,6 +92,7 @@ while True:
 
         if e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT:
             left = True
+            flag = True
         if e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT:
             right = True
 
@@ -106,7 +115,15 @@ while True:
         asteroid.draw(screen)
 
     # выведем жизнь на экран белым цветом
+    dist = dist + 1
     life = font.render(f'HP: {ship.life}', False, (255, 255, 255))
+    distOUT = font.render(f'dist: {dist}', False, (255, 255, 255))
     screen.blit(life, (20, 20))
+    screen.blit(distOUT, (1100, 20))
+    if (ship.life < 1):
+        ship.kill(ship)
+    if (dist > 999):
+        raise SystemExit("QUIT")
+
 
     pygame.display.update()
