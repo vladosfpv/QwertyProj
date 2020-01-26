@@ -237,8 +237,8 @@ while True:
         asteroid.draw(screen)
 
     # выведем жизнь на экран белым цветом
-    score1 = font.render(f'player 1: {ship1.score}', False, (255, 255, 255))
-    score2 = font.render(f'player 2: {ship2.score}', False, (255, 255, 255))
+    score1 = font.render('player 1: {ship1.score}', False, (255, 255, 255))
+    score2 = font.render('player 2: {ship2.score}', False, (255, 255, 255))
     screen.blit(score1, (20, 20))
     screen.blit(score2, (1000, 20))
     pygame.display.update()
