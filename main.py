@@ -294,13 +294,13 @@ while True:
         pygame.mixer.music.stop()
         font = pygame.font.SysFont('Arial', 30)
         if (ship2.score > ship1.score):
-            end = font.render(f'Player 2 win', False, (255, 0, 0))
+            end = font.render('Player 2 win', False, (255, 0, 0))
             screen.blit(end, (540, 100))
         elif (ship1.score > ship2.score):
-            end = font.render(f'Player 1 win', False, (255, 0, 0))
+            end = font.render('Player 1 win', False, (255, 0, 0))
             screen.blit(end, (540, 100))
         else:
-            end = font.render(f'Draw', False, (255, 0, 0))
+            end = font.render('Draw', False, (255, 0, 0))
             screen.blit(end, (600, 100))
 
 
