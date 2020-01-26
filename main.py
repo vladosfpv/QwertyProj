@@ -34,16 +34,16 @@ class Spaceship(pygame.sprite.Sprite):
 
     # добавим группу с астероидами в обновление координат корабля
     def update(self, left, right, asteroids):
-        if left:
-            self.xvel -= 3
+        if(self.rect.x  > 300):
+            if left:
+                self.rect.x -= 200
+        # если нажата клавиша вправо, увеличиваем скорость
+        if(self.rect.x < 850):
+            if right:
+                self.rect.x += 200
+        # если ничего не нажато - тормозим
+        # изменяем координаты на скорость
 
-        if right:
-            self.xvel += 3
-
-        if not (left or right):
-            self.xvel = 0
-
-        self.rect.x += self.xvel
 
         # для каждого астероида
         for asteroid in asteroids:
@@ -51,6 +51,8 @@ class Spaceship(pygame.sprite.Sprite):
             if self.rect.colliderect(asteroid.rect):
                 # уменьшаем жизнь
                 self.life -= 1
+            if (self.life < 0):
+                self.kill()
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
@@ -58,7 +60,7 @@ pygame.display.set_caption("Asteroids")
 
 sky = scale(pygame.image.load("images/road.png"), (1280, 1024))
 
-ship = Spaceship(400, 400)
+ship = Spaceship(300, 300)
 
 left = False
 right = False
@@ -70,7 +72,8 @@ pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 30)
 
 while True:
-
+    if(ship.rect.x < 1):
+        ship.rect.x = 1
     if random.randint(1, 1000) > 900:
         asteroid_x = random.randint(325, 325)
         asteroid_y = -100
@@ -107,4 +110,3 @@ while True:
     screen.blit(life, (20, 20))
 
     pygame.display.update()
-    #Gennadiy ti lochara
