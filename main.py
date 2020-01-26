@@ -5,28 +5,24 @@ from pygame.transform import scale
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-
         self.image = scale(pygame.image.load("images/asteroid.png"), (50, 50))
         self.rect = pygame.Rect(x, y, 50, 50)
-        self.yvel = 0
-
-    def draw(self, screen):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-
+        self.yvel = 5
     def update(self):
+        self.rect.y += 5
         if self.rect.y > 900:
             self.kill()
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
 
 class Spaceship(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.rect = pygame.Rect(x, y, 50, 100)
+        self.rect = pygame.Rect(x, y, 50, 195)
         self.image = scale(pygame.image.load("images/car.png"), (100, 200))
         self.xvel = 0
         self.yvel = 0
-        # добавим кораблю здоровье
         self.life = 100
-
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
@@ -100,9 +96,9 @@ dist = 0
 while True:
     if(ship.rect.x < 1):
         ship.rect.x = 1
-    if random.randint(1, 1000) > 900:
-        asteroid_x = random.randint(325, 325)
-        asteroid_y = -100
+    if random.randint(1, 150) > 149:
+        asteroid_x = random.randint(325, 900)
+        asteroid_y = 0
         asteroid = Asteroid(asteroid_x, asteroid_y)
         asteroids.add(asteroid)
 
@@ -139,8 +135,6 @@ while True:
     for asteroid in asteroids:
         asteroid.update()
         asteroid.draw(screen)
-
-
 
     # выведем жизнь на экран белым цветом
     dist = dist + 1
