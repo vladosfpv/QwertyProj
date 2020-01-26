@@ -72,6 +72,7 @@ class Player1(pygame.sprite.Sprite):
         self.rect.y += self.yvel
 
 
+
 class Player2(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
