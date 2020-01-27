@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 from pygame.transform import scale
 
 class Road(pygame.sprite.Sprite):
@@ -10,7 +11,7 @@ class Road(pygame.sprite.Sprite):
         self.yvel = 0
 
     def update(self):
-        self.rect.y += 20
+        self.rect.y += 30
         if self.rect.y > 1024:
             self.kill()
             self.rect.y = 0
@@ -26,7 +27,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, 50, 50)
         self.yvel = 5
     def update(self):
-        self.rect.y += 5
+        self.rect.y += 30
         if self.rect.y > 900:
             self.kill()
     def draw(self, screen):
@@ -83,8 +84,6 @@ class Player1(pygame.sprite.Sprite):
                 asteroid.kill()
                 if self.score >= 10:
                     self.score -= 10
-        if self.rect.colliderect(another.rect):
-            self.xvel = (-self.xvel)/2
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
@@ -141,15 +140,14 @@ class Player2(pygame.sprite.Sprite):
                 asteroid.kill()
                 if self.score >= 10:
                     self.score -= 10
-        if self.rect.colliderect(another.rect):
-            self.xvel = (-self.xvel)/2
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
 pygame.display.set_caption("Asteroids")
-
+pygame.mixer.music.load("music/mainSong.mp3")
+pygame.mixer.music.play()
 road = Road(0, 0)
 
 ship1 = Player1(300, 300)
@@ -169,7 +167,7 @@ asteroids = pygame.sprite.Group()
 # загрузим системный шрифт
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 30)
-
+# Let it play for up to 30 seconds, then sto
 #основной цикл
 while True:
 
@@ -182,7 +180,7 @@ while True:
         ship2.rect.x = 1
     if random.randint(1, 1000) > 950:
         asteroid_x = random.randint(325, 900)
-        asteroid_y = 0
+        asteroid_y = -100
         asteroid = Asteroid(asteroid_x, asteroid_y)
         asteroids.add(asteroid)
 
