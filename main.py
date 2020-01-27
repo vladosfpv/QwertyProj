@@ -2,6 +2,23 @@ import pygame
 import random
 from pygame.transform import scale
 
+class Road(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.rect = pygame.Rect(x, y, 1280, 1024)
+        self.image = scale(pygame.image.load("images/road.png"), (1280, 1024))
+        self.yvel = 0
+
+    def update(self):
+        self.rect.y += 20
+        if self.rect.y > 1024:
+            self.kill()
+            self.rect.y = 0
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+        screen.blit(self.image, (self.rect.x, self.rect.y - 1024))
+
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -72,7 +89,6 @@ class Player1(pygame.sprite.Sprite):
         self.rect.y += self.yvel
 
 
-
 class Player2(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -134,7 +150,7 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
 pygame.display.set_caption("Asteroids")
 
-sky = scale(pygame.image.load("images/road.png"), (1280, 1024))
+road = Road(0, 0)
 
 ship1 = Player1(300, 300)
 ship2 = Player2(500, 300)
@@ -156,6 +172,10 @@ font = pygame.font.SysFont('Comic Sans MS', 30)
 
 #основной цикл
 while True:
+
+    road.update()
+    road.draw(screen)
+
     if(ship1.rect.x < 1):
         ship1.rect.x = 1
     if (ship2.rect.x < 1):
@@ -207,7 +227,6 @@ while True:
         if e.type == pygame.QUIT:
             raise SystemExit("QUIT")
 
-    screen.blit(sky, (0, 0))
 
     # добавим группу астероидов в параметры
     ship1.update(left1, right1, up1, down1, asteroids, ship2)
